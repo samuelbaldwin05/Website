@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+
+interface Props {
+  entry: CollectionEntry<"views">;
+  loading?: "lazy" | "eager";
+  index: number;
+}
+
+const { entry, loading = "lazy", index } = Astro.props;
+const { title, location, date, image, alt } = entry.data;
+const isFirstRow = index < 4;
+const loadStrategy = isFirstRow ? "eager" : loading;
+---
+
+<figure class="group overflow-hidden border border-neutral-200 bg-neutral-50">
+  <a href="#" class="block" data-lightbox data-index={index} aria-label={`View ${title} full size`}>
+    <Image
+      src={image}
+      alt={alt}
+      width={600}
+      height={400}
+      loading={loadStrategy}
+      class="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+      fetchpriority={isFirstRow ? "high" : "auto"}
+    />
+  </a>
+  <figcaption class="p-3 text-sm">
+    <p class="font-medium text-neutral-900">{title}</p>
+    {(location || date) && (
+      <p class="mt-0.5 text-neutral-500">
+        {[location, date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })].filter(Boolean).join(" · ")}
+      </p>
+    )}
+  </figcaption>
+</figure>

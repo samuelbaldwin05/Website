@@ -1,0 +1,320 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import GalleryImage from "../components/GalleryImage.astro";
+import Search from "astro-pagefind/components/Search";
+import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
+import projectsJson from "../data/projects.json";
+
+const projects = [...projectsJson].sort(
+  (a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf()
+);
+
+const views = (await getCollection("views")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const lightboxImageData = await Promise.all(
+  views.map(async (e) => {
+    const img = await getImage({ src: e.data.image });
+    return { src: img.src, alt: e.data.alt, title: e.data.title };
+  })
+);
+---
+
+<BaseLayout>
+  <div id="home" class="page-section">
+    <div class="mx-auto max-w-4xl px-4 pt-6 pb-12 sm:px-6 sm:pt-8 sm:pb-16">
+      <section class="mb-12" data-pagefind-body>
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-10">
+          <div class="flex-1 min-w-0">
+            <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">
+              Samuel Baldwin
+            </h1>
+            <div class="flex flex-col gap-4 mt-4 lg:flex-row lg:gap-10">
+              <div class="flex-1 space-y-2 min-w-0">
+                <div class="space-y-2 text-xs text-neutral-700 sm:text-sm">
+                  <p>
+                    Hi, I'm Sam. I'm a third-year student at Northeastern University, working towards a B.S. in Data Science.
+                  </p>
+                  <p>
+                    I worked at NExT Consulting (<a href="https://nunext.dev" target="_blank" rel="noopener noreferrer" class="text-accent-600 underline-offset-2 hover:text-accent-700 hover:underline">nunext.dev</a>) with Via Separations on Stream, an AWS-hosted platform consolidating thousands of live data points in an ETL pipeline with a custom Grafana site. At Generate (<a href="https://generatenu.com" target="_blank" rel="noopener noreferrer" class="text-accent-600 underline-offset-2 hover:text-accent-700 hover:underline">generatenu.com</a>) I'm Tech Lead on StrideTrack, a shoe sensor app for track coaches.
+                  </p>
+                  <p>
+                    I'm a teaching assistant for Database Design (CS3200) with Professor Mark Fontenot at Khoury College, Northeastern University. I'm also involved in research with the SHAC Lab (<a href="http://peellelab.org/" target="_blank" rel="noopener noreferrer" class="text-accent-600 underline-offset-2 hover:text-accent-700 hover:underline">peellelab.org</a>), directed by Jonathan Peelle. See my resume for more.
+                  </p>
+                </div>
+                <p class="pt-2">
+                  <a
+                    href="#projects"
+                    data-nav="projects"
+                    class="text-sm font-medium text-accent-600 underline-offset-2 hover:text-accent-700 hover:underline"
+                  >
+                    View projects →
+                  </a>
+                </p>
+              </div>
+              <div class="flex-shrink-0 flex flex-col items-center gap-4 lg:w-64">
+                <img
+                  src="/headshot.jpg"
+                  alt="Sam Baldwin"
+                  class="w-full aspect-square object-cover"
+                  onerror="this.style.display='none'"
+                />
+                <div class="flex items-center justify-center gap-4" aria-label="Contact links">
+                  <a href="mailto:baldwin.sam@northeastern.edu" class="text-neutral-500 transition-colors hover:text-accent-700" aria-label="Email">
+                    <svg class="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm0 2.25V18h16V7.25l-7.37 5.16a2 2 0 0 1-2.26 0zM5.2 6.5 12 11.34 18.8 6.5z" />
+                    </svg>
+                  </a>
+                  <a href="https://www.linkedin.com/in/baldwinsamuel/" target="_blank" rel="noopener noreferrer" class="text-neutral-500 transition-colors hover:text-accent-700" aria-label="LinkedIn">
+                    <svg class="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                  </a>
+                  <a href="https://github.com/samuelbaldwin05" target="_blank" rel="noopener noreferrer" class="text-neutral-500 transition-colors hover:text-accent-700" aria-label="GitHub">
+                    <svg class="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M12 2a9.75 9.75 0 0 0-3.08 19c.49.09.67-.21.67-.47 0-.23-.01-.84-.01-1.64-2.45.45-2.96-1.18-2.96-1.18-.45-1.15-1.1-1.46-1.1-1.46-.9-.61.07-.6.07-.6 1 .07 1.53 1.04 1.53 1.04.89 1.54 2.34 1.1 2.91.84.09-.66.35-1.1.63-1.35-1.96-.23-4.02-.98-4.02-4.37 0-.97.35-1.76.93-2.38-.09-.23-.4-1.16.09-2.41 0 0 .74-.24 2.43.91a8.3 8.3 0 0 1 4.42 0c1.69-1.15 2.43-.91 2.43-.91.49 1.25.18 2.18.09 2.41.58.62.93 1.41.93 2.38 0 3.4-2.06 4.13-4.02 4.35.36.31.68.92.68 1.86 0 1.35-.01 2.44-.01 2.77 0 .26.18.57.68.47A9.75 9.75 0 0 0 12 2z" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div id="projects" class="page-section hidden">
+    <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+      <header class="mb-8">
+        <h1 class="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Projects</h1>
+        <p class="mt-2 text-sm text-neutral-600 sm:text-base">Things I've built or contributed to.</p>
+        <div class="mt-4 max-w-md">
+          <Search id="projects-search" className="pagefind-ui" uiOptions={{ showImages: false }} />
+        </div>
+      </header>
+
+      <div class="space-y-10" data-pagefind-body>
+        {projects.length === 0 ? (
+          <p class="text-neutral-500">No projects yet.</p>
+        ) : (
+          <ul class="grid gap-8 sm:grid-cols-2">
+            {projects.map((project) => (
+              <li>
+                <ProjectCard project={{ data: project }} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  </div>
+
+  <div id="views" class="page-section hidden">
+    <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+      <header class="mb-8 sm:mb-12" data-pagefind-ignore>
+        <h1 class="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Views</h1>
+        <p class="mt-2 text-neutral-600">A few photos from here and there.</p>
+      </header>
+
+      <div class="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {views.map((entry, index) => (
+          <GalleryImage entry={entry} index={index} />
+        ))}
+      </div>
+
+      <div
+        id="lightbox"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Image lightbox"
+      >
+        <button
+          type="button"
+          id="lightbox-close"
+          class="absolute right-4 top-4 rounded bg-white/10 px-3 py-1 text-white hover:bg-white/20"
+          aria-label="Close"
+        >
+          Close
+        </button>
+        <img id="lightbox-img" src="" alt="" class="max-h-[90vh] max-w-full rounded object-contain" />
+      </div>
+    </div>
+  </div>
+
+  <div id="games" class="page-section hidden">
+    <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+      <header class="mb-8" data-pagefind-ignore>
+        <h1 class="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Games</h1>
+      </header>
+      <div class="grid gap-6 sm:grid-cols-2">
+        <a
+          href="https://quoridor.sambaldwin.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="block border border-neutral-200 bg-neutral-50 transition-colors hover:border-accent-400 hover:bg-accent-50 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2"
+        >
+          <div class="aspect-[4/3] overflow-hidden bg-neutral-200">
+            <img
+              src="/games/Quoridor.png"
+              alt="Quoridor"
+              class="h-full w-full object-cover"
+            />
+          </div>
+          <div class="p-3 text-center">
+            <span class="font-medium text-neutral-900">Quoridor</span>
+          </div>
+        </a>
+        <a
+          href="https://minigolf.sambaldwin.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="block border border-neutral-200 bg-neutral-50 transition-colors hover:border-accent-400 hover:bg-accent-50 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2"
+        >
+          <div class="aspect-[4/3] overflow-hidden bg-neutral-200">
+            <img
+              src="/games/minigolf.png"
+              alt="Minigolf"
+              class="h-full w-full object-cover"
+            />
+          </div>
+          <div class="p-3 text-center">
+            <span class="font-medium text-neutral-900">Minigolf</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div id="resume" class="page-section hidden flex flex-col overflow-hidden">
+    <iframe
+      src="/SamuelBaldwinResume.pdf#zoom=100"
+      title="Sam Baldwin Resume (PDF)"
+      class="resume-pdf-iframe w-full flex-1 min-h-0 border-0"
+    />
+  </div>
+
+  <script define:vars={{ imageData: lightboxImageData }}>
+    (function () {
+      // Navigation
+      const sections = document.querySelectorAll(".page-section");
+      const navLinks = document.querySelectorAll("[data-nav]");
+
+      function showSection(id) {
+        sections.forEach((section) => {
+          section.classList.add("hidden");
+        });
+        navLinks.forEach((link) => {
+          const linkId = link.getAttribute("data-nav") || link.getAttribute("href")?.slice(1);
+          link.classList.toggle("nav-active", linkId === id);
+        });
+        const target = document.getElementById(id);
+        if (target) {
+          target.classList.remove("hidden");
+          window.history.pushState({ section: id }, "", `#${id}`);
+          window.scrollTo({ top: 0, behavior: "instant" });
+          if (id === "resume") {
+            document.body.classList.add("resume-view");
+            document.documentElement.classList.add("resume-view");
+            document.documentElement.style.overflow = "hidden";
+          } else {
+            document.body.classList.remove("resume-view");
+            document.documentElement.classList.remove("resume-view");
+            document.documentElement.style.overflow = "";
+          }
+        }
+      }
+
+      navLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const target = link.getAttribute("data-nav") || link.getAttribute("href")?.slice(1);
+          if (target) showSection(target);
+        });
+      });
+
+      // Handle initial hash
+      const hash = window.location.hash.slice(1) || "home";
+      showSection(hash);
+
+      // Handle browser back/forward
+      window.addEventListener("popstate", (e) => {
+        const section = e.state?.section || window.location.hash.slice(1) || "home";
+        showSection(section);
+      });
+
+      // Lightbox
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-img");
+      const closeBtn = document.getElementById("lightbox-close");
+      if (!lightbox || !lightboxImg || !closeBtn) return;
+
+      const links = document.querySelectorAll("[data-lightbox]");
+      const imageData = typeof imageData !== "undefined" ? imageData : [];
+
+      function open(index) {
+        const data = imageData[index];
+        if (data) {
+          lightboxImg.src = data.src;
+          lightboxImg.alt = data.alt || data.title || "";
+          lightbox.classList.remove("hidden");
+          lightbox.classList.add("flex");
+          lightbox.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        }
+      }
+
+      function close() {
+        lightbox.classList.add("hidden");
+        lightbox.classList.remove("flex");
+        lightbox.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      links.forEach((link, i) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          open(i);
+        });
+      });
+      closeBtn.addEventListener("click", close);
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) close();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") close();
+      });
+    })();
+  </script>
+
+  <style>
+    .pagefind-ui {
+      --pagefind-ui-scale: 0.9;
+      --pagefind-ui-primary: #2d6f4a;
+      --pagefind-ui-text: #171717;
+      --pagefind-ui-border: #e5e5e5;
+      --pagefind-ui-background: #fafafa;
+      --pagefind-ui-border-width: 1px;
+      --pagefind-ui-border-radius: 0.375rem;
+      --pagefind-ui-font: "Inter", system-ui, sans-serif;
+    }
+    .pagefind-ui .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin-top: 0.25rem;
+      z-index: 50;
+      padding: 0.75rem 1rem 1rem;
+      overflow-y: auto;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      border-radius: var(--pagefind-ui-border-radius);
+      background-color: var(--pagefind-ui-background);
+      border: 1px solid var(--pagefind-ui-border);
+    }
+  </style>
+</BaseLayout>
