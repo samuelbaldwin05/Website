@@ -8,12 +8,15 @@
     "preview": "astro preview"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.0.0",
     "astro-pagefind": "^1.8.5",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
+    "heic-convert": "^2.1.0",
     "typescript": "^5.0.0"
   }
 }

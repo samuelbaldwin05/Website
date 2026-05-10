@@ -1,89 +1,144 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
-import GalleryImage from "../components/GalleryImage.astro";
-import Search from "astro-pagefind/components/Search";
 import { getCollection } from "astro:content";
-import { getImage } from "astro:assets";
-import projectsJson from "../data/projects.json";
+import { getImage, Image } from "astro:assets";
+import viewsJson from "../content/views/views.json";
+import headshot from "../assets/headshot.jpg";
 
-const projects = [...projectsJson].sort(
-  (a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf()
+const projects = (await getCollection("projects")).sort(
+  (a, b) => Number(a.id) - Number(b.id)
 );
 
+const viewsOrder = new Map(viewsJson.map((v: { id: string }, i: number) => [v.id, i]));
 const views = (await getCollection("views")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+  (a, b) => (viewsOrder.get(a.id) ?? 0) - (viewsOrder.get(b.id) ?? 0)
 );
 
-const lightboxImageData = await Promise.all(
-  views.map(async (e) => {
-    const img = await getImage({ src: e.data.image });
-    return { src: img.src, alt: e.data.alt, title: e.data.title };
+const ROW_HEIGHT = 380;
+const MONTH_NAMES = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+
+const galleryItems = await Promise.all(
+  views.map(async (e, i) => {
+    const meta = e.data.image;
+    const optimized = await getImage({
+      src: meta,
+      height: ROW_HEIGHT * 2,
+    });
+    const full = await getImage({ src: meta });
+    const aspect = meta.width / meta.height;
+    const displayWidth = Math.round(ROW_HEIGHT * aspect);
+    const d = e.data.date;
+    const yearShort = String(d.getUTCFullYear()).slice(-2);
+    const caption = `${MONTH_NAMES[d.getUTCMonth()]} '${yearShort}`;
+    return {
+      src: optimized.src,
+      fullSrc: full.src,
+      width: meta.width,
+      height: meta.height,
+      displayWidth,
+      title: e.data.title,
+      alt: e.data.alt,
+      caption,
+      index: i,
+    };
   })
 );
+
+const lightboxImageData = galleryItems.map((g) => ({
+  src: g.fullSrc,
+  alt: g.alt,
+  title: g.title,
+}));
 ---
 
-<BaseLayout>
+<BaseLayout
+  title="Sam Baldwin — Personal Portfolio"
+  description="Sam Baldwin — fourth-year Data Science student at Northeastern University. Projects in software engineering, machine learning, and game development."
+>
   <div id="home" class="page-section">
-    <div class="mx-auto max-w-4xl px-4 pt-6 pb-12 sm:px-6 sm:pt-8 sm:pb-16">
-      <section class="mb-12" data-pagefind-body>
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-10">
-          <div class="flex-1 min-w-0">
-            <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">
-              Samuel Baldwin
-            </h1>
-            <div class="flex flex-col gap-4 mt-4 lg:flex-row lg:gap-10">
-              <div class="flex-1 space-y-2 min-w-0">
-                <div class="space-y-2 text-xs text-neutral-700 sm:text-sm">
-                  <p>
-                    Hi, I'm Sam. I'm a third-year student at Northeastern University, working towards a B.S. in Data Science.
-                  </p>
-                  <p>
-                    I worked at NExT Consulting (<a href="https://nunext.dev" target="_blank" rel="noopener noreferrer" class="text-accent-600 underline-offset-2 hover:text-accent-700 hover:underline">nunext.dev</a>) with Via Separations on Stream, an AWS-hosted platform consolidating thousands of live data points in an ETL pipeline with a custom Grafana site. At Generate (<a href="https://generatenu.com" target="_blank" rel="noopener noreferrer" class="text-accent-600 underline-offset-2 hover:text-accent-700 hover:underline">generatenu.com</a>) I'm Tech Lead on StrideTrack, a shoe sensor app for track coaches.
-                  </p>
-                  <p>
-                    I'm a teaching assistant for Database Design (CS3200) with Professor Mark Fontenot at Khoury College, Northeastern University. I'm also involved in research with the SHAC Lab (<a href="http://peellelab.org/" target="_blank" rel="noopener noreferrer" class="text-accent-600 underline-offset-2 hover:text-accent-700 hover:underline">peellelab.org</a>), directed by Jonathan Peelle. See my resume for more.
-                  </p>
-                </div>
-                <p class="pt-2">
-                  <a
-                    href="#projects"
-                    data-nav="projects"
-                    class="text-sm font-medium text-accent-600 underline-offset-2 hover:text-accent-700 hover:underline"
-                  >
-                    View projects →
-                  </a>
-                </p>
-              </div>
-              <div class="flex-shrink-0 flex flex-col items-center gap-4 lg:w-64">
-                <img
-                  src="/headshot.jpg"
-                  alt="Sam Baldwin"
-                  class="w-full aspect-square object-cover"
-                  onerror="this.style.display='none'"
-                />
-                <div class="flex items-center justify-center gap-4" aria-label="Contact links">
-                  <a href="mailto:baldwin.sam@northeastern.edu" class="text-neutral-500 transition-colors hover:text-accent-700" aria-label="Email">
-                    <svg class="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm0 2.25V18h16V7.25l-7.37 5.16a2 2 0 0 1-2.26 0zM5.2 6.5 12 11.34 18.8 6.5z" />
-                    </svg>
-                  </a>
-                  <a href="https://www.linkedin.com/in/baldwinsamuel/" target="_blank" rel="noopener noreferrer" class="text-neutral-500 transition-colors hover:text-accent-700" aria-label="LinkedIn">
-                    <svg class="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                  </a>
-                  <a href="https://github.com/samuelbaldwin05" target="_blank" rel="noopener noreferrer" class="text-neutral-500 transition-colors hover:text-accent-700" aria-label="GitHub">
-                    <svg class="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M12 2a9.75 9.75 0 0 0-3.08 19c.49.09.67-.21.67-.47 0-.23-.01-.84-.01-1.64-2.45.45-2.96-1.18-2.96-1.18-.45-1.15-1.1-1.46-1.1-1.46-.9-.61.07-.6.07-.6 1 .07 1.53 1.04 1.53 1.04.89 1.54 2.34 1.1 2.91.84.09-.66.35-1.1.63-1.35-1.96-.23-4.02-.98-4.02-4.37 0-.97.35-1.76.93-2.38-.09-.23-.4-1.16.09-2.41 0 0 .74-.24 2.43.91a8.3 8.3 0 0 1 4.42 0c1.69-1.15 2.43-.91 2.43-.91.49 1.25.18 2.18.09 2.41.58.62.93 1.41.93 2.38 0 3.4-2.06 4.13-4.02 4.35.36.31.68.92.68 1.86 0 1.35-.01 2.44-.01 2.77 0 .26.18.57.68.47A9.75 9.75 0 0 0 12 2z" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
+    <div class="home-wrap">
+      <h1 class="home-name fade-up fade-up-2">
+        Samuel <span class="home-name-accent">Baldwin</span>
+      </h1>
+
+      <hr class="home-name-divider fade-up fade-up-3" />
+
+      <div class="home-cols fade-up fade-up-4" data-pagefind-body>
+        <div class="home-left">
+          <div class="home-roles">
+            <div class="home-role-item"><span class="home-role-bullet"></span>App Developer @ Bain Capital</div>
+            <div class="home-role-item"><span class="home-role-bullet"></span>Tech Lead @ Generate</div>
+            <div class="home-role-item"><span class="home-role-bullet"></span>Software Engineering Alum @ NExT Consulting</div>
+          </div>
+
+          <div class="home-bio">
+          <p>
+            Hi, I'm Sam! I'm a fourth-year B.S. Data Science student at Northeastern University.
+            I enjoy backpacking, skiing, scuba diving, playing piano or soccer, watching FC Barcelona,
+            hanging out with my cats, and approaching complex data science and machine learning problems!
+          </p>
+          <p>
+            I worked at NExT Consulting (<a href="https://nunext.dev" target="_blank" rel="noopener noreferrer">nunext.dev</a>)
+            with Via Separations on Stream, an AWS-hosted platform consolidating data from thousands of live sensors in an ETL pipeline with a custom Grafana site.
+            At Generate (<a href="https://generatenu.com" target="_blank" rel="noopener noreferrer">generatenu.com</a>)
+            I'm Tech Lead on StrideTrack, building a data analysis application for a shoe sensor app for track coaches.
+            This July I will be starting an App Developer role at Bain Capital.
+          </p>
+          <p>
+            I'm a teaching assistant for Database Design (CS3200) with Professor Mark Fontenot at Khoury College, Northeastern University.
+            I'm also involved in research with the SHAC Lab (<a href="http://peellelab.org/" target="_blank" rel="noopener noreferrer">peellelab.org</a>),
+            directed by Jonathan Peelle. Feel free to reach out either on <a href="https://www.linkedin.com/in/baldwinsamuel/" target="_blank" rel="noopener noreferrer">LinkedIn</a> or by <a href="mailto:baldwin.sam@northeastern.edu">emailing me directly</a>!
+          </p>
+
+          <a class="home-cta" href="#projects" data-nav="projects">
+            View projects
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 7h10M8 3l4 4-4 4"/>
+            </svg>
+          </a>
           </div>
         </div>
-      </section>
+
+        <div class="home-photo-col">
+          <div class="home-photo-frame">
+            <Image
+              src={headshot}
+              alt="Sam Baldwin"
+              class="home-photo"
+              width={1200}
+              widths={[400, 800, 1200]}
+              sizes="(max-width: 900px) 80vw, 320px"
+              format="webp"
+              quality={80}
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </div>
+          <div class="home-location">Boston, MA</div>
+          <div class="home-socials">
+            <a href="mailto:baldwin.sam@northeastern.edu" class="home-social-link" aria-label="Email Sam Baldwin">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" role="img" focusable="false">
+                <title>Email Sam Baldwin</title>
+                <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm0 2.25V18h16V7.25l-7.37 5.16a2 2 0 0 1-2.26 0zM5.2 6.5 12 11.34 18.8 6.5z"/>
+              </svg>
+            </a>
+            <a href="https://www.linkedin.com/in/baldwinsamuel/" target="_blank" rel="noopener noreferrer" class="home-social-link" aria-label="Sam Baldwin's LinkedIn profile">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" role="img" focusable="false">
+                <title>LinkedIn profile</title>
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+            <a href="https://github.com/samuelbaldwin05" target="_blank" rel="noopener noreferrer" class="home-social-link" aria-label="Sam Baldwin's GitHub profile">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" role="img" focusable="false">
+                <title>GitHub profile</title>
+                <path d="M12 2a9.75 9.75 0 0 0-3.08 19c.49.09.67-.21.67-.47 0-.23-.01-.84-.01-1.64-2.45.45-2.96-1.18-2.96-1.18-.45-1.15-1.1-1.46-1.1-1.46-.9-.61.07-.6.07-.6 1 .07 1.53 1.04 1.53 1.04.89 1.54 2.34 1.1 2.91.84.09-.66.35-1.1.63-1.35-1.96-.23-4.02-.98-4.02-4.37 0-.97.35-1.76.93-2.38-.09-.23-.4-1.16.09-2.41 0 0 .74-.24 2.43.91a8.3 8.3 0 0 1 4.42 0c1.69-1.15 2.43-.91 2.43-.91.49 1.25.18 2.18.09 2.41.58.62.93 1.41.93 2.38 0 3.4-2.06 4.13-4.02 4.35.36.31.68.92.68 1.86 0 1.35-.01 2.44-.01 2.77 0 .26.18.57.68.47A9.75 9.75 0 0 0 12 2z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -92,9 +147,6 @@ const lightboxImageData = await Promise.all(
       <header class="mb-8">
         <h1 class="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Projects</h1>
         <p class="mt-2 text-sm text-neutral-600 sm:text-base">Things I've built or contributed to.</p>
-        <div class="mt-4 max-w-md">
-          <Search id="projects-search" className="pagefind-ui" uiOptions={{ showImages: false }} />
-        </div>
       </header>
 
       <div class="space-y-10" data-pagefind-body>
@@ -104,7 +156,7 @@ const lightboxImageData = await Promise.all(
           <ul class="grid gap-8 sm:grid-cols-2">
             {projects.map((project) => (
               <li>
-                <ProjectCard project={{ data: project }} />
+                <ProjectCard project={project} />
               </li>
             ))}
           </ul>
@@ -114,21 +166,43 @@ const lightboxImageData = await Promise.all(
   </div>
 
   <div id="views" class="page-section hidden">
-    <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+    <div class="mx-auto max-w-4xl px-4 pt-12 sm:px-6">
       <header class="mb-8 sm:mb-12" data-pagefind-ignore>
         <h1 class="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Views</h1>
-        <p class="mt-2 text-neutral-600">A few photos from here and there.</p>
+        <p class="mt-2 text-sm text-neutral-600 sm:text-base">A few of my favorite photos.</p>
       </header>
-
-      <div class="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {views.map((entry, index) => (
-          <GalleryImage entry={entry} index={index} />
+    </div>
+    <div class="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
+      <div class="views-gallery">
+        {galleryItems.map((item) => (
+          <figure class="views-item" style={`width:${item.displayWidth}px;`}>
+            <a
+              href="#"
+              data-lightbox
+              data-index={item.index}
+              class="views-link"
+              aria-label={`View ${item.title} full size`}
+            >
+              <img
+                src={item.src}
+                alt={item.alt}
+                width={item.width}
+                height={item.height}
+                loading={item.index < 3 ? "eager" : "lazy"}
+                class="views-img"
+              />
+            </a>
+            <figcaption class="views-caption">
+              <span class="font-medium text-neutral-900">{item.title}</span>
+              <span class="text-neutral-500"> — {item.caption}</span>
+            </figcaption>
+          </figure>
         ))}
       </div>
 
       <div
         id="lightbox"
-        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-6"
         aria-hidden="true"
         role="dialog"
         aria-modal="true"
@@ -137,12 +211,34 @@ const lightboxImageData = await Promise.all(
         <button
           type="button"
           id="lightbox-close"
-          class="absolute right-4 top-4 rounded bg-white/10 px-3 py-1 text-white hover:bg-white/20"
+          class="lightbox-close"
           aria-label="Close"
         >
-          Close
+          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+            <path d="M5 5 L19 19 M19 5 L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
+          </svg>
         </button>
-        <img id="lightbox-img" src="" alt="" class="max-h-[90vh] max-w-full rounded object-contain" />
+        <button
+          type="button"
+          id="lightbox-prev"
+          class="lightbox-nav lightbox-nav-prev"
+          aria-label="Previous image"
+        >
+          <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true">
+            <path d="M15 5 L7 12 L15 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          id="lightbox-next"
+          class="lightbox-nav lightbox-nav-next"
+          aria-label="Next image"
+        >
+          <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true">
+            <path d="M9 5 L17 12 L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+          </svg>
+        </button>
+        <img id="lightbox-img" src="" alt="" class="max-h-[88vh] max-w-[92vw] object-contain" />
       </div>
     </div>
   </div>
@@ -151,6 +247,9 @@ const lightboxImageData = await Promise.all(
     <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
       <header class="mb-8" data-pagefind-ignore>
         <h1 class="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Games</h1>
+        <p class="mt-2 text-sm text-neutral-600 sm:text-base">
+          I enjoy making games and I'm actively improving Quoridor and its AI model!
+        </p>
       </header>
       <div class="grid gap-6 sm:grid-cols-2">
         <a
@@ -161,8 +260,12 @@ const lightboxImageData = await Promise.all(
         >
           <div class="aspect-[4/3] overflow-hidden bg-neutral-200">
             <img
-              src="/games/Quoridor.png"
+              src="/games/quoridor.png"
               alt="Quoridor"
+              width="800"
+              height="600"
+              loading="lazy"
+              decoding="async"
               class="h-full w-full object-cover"
             />
           </div>
@@ -180,6 +283,10 @@ const lightboxImageData = await Promise.all(
             <img
               src="/games/minigolf.png"
               alt="Minigolf"
+              width="800"
+              height="600"
+              loading="lazy"
+              decoding="async"
               class="h-full w-full object-cover"
             />
           </div>
@@ -191,12 +298,11 @@ const lightboxImageData = await Promise.all(
     </div>
   </div>
 
-  <div id="resume" class="page-section hidden flex flex-col overflow-hidden">
-    <iframe
-      src="/SamuelBaldwinResume.pdf#zoom=100"
-      title="Sam Baldwin Resume (PDF)"
-      class="resume-pdf-iframe w-full flex-1 min-h-0 border-0"
-    />
+  <div
+    id="resume"
+    class="page-section hidden flex flex-col overflow-hidden"
+    data-resume-pdf="/SamuelBaldwinResume.pdf#zoom=100"
+  >
   </div>
 
   <script define:vars={{ imageData: lightboxImageData }}>
@@ -216,6 +322,26 @@ const lightboxImageData = await Promise.all(
         const target = document.getElementById(id);
         if (target) {
           target.classList.remove("hidden");
+          // Lazy-instantiate the resume PDF iframe on first visit
+          if (id === "resume" && !target.querySelector("iframe")) {
+            const src = target.getAttribute("data-resume-pdf");
+            if (src) {
+              const iframe = document.createElement("iframe");
+              iframe.src = src;
+              iframe.title = "Sam Baldwin Resume (PDF)";
+              iframe.className = "resume-pdf-iframe w-full flex-1 min-h-0 border-0";
+              target.appendChild(iframe);
+            }
+          }
+          // Re-trigger fade-up animations on section enter
+          target.classList.remove("section-enter");
+          void target.offsetWidth;
+          target.classList.add("section-enter");
+          target.querySelectorAll(".fade-up").forEach((el) => {
+            el.style.animation = "none";
+            void el.offsetWidth;
+            el.style.animation = "";
+          });
           window.history.pushState({ section: id }, "", `#${id}`);
           window.scrollTo({ top: 0, behavior: "instant" });
           if (id === "resume") {
@@ -252,21 +378,28 @@ const lightboxImageData = await Promise.all(
       const lightbox = document.getElementById("lightbox");
       const lightboxImg = document.getElementById("lightbox-img");
       const closeBtn = document.getElementById("lightbox-close");
+      const prevBtn = document.getElementById("lightbox-prev");
+      const nextBtn = document.getElementById("lightbox-next");
       if (!lightbox || !lightboxImg || !closeBtn) return;
 
       const links = document.querySelectorAll("[data-lightbox]");
-      const imageData = typeof imageData !== "undefined" ? imageData : [];
+      let currentIndex = 0;
+
+      function show(index) {
+        if (!imageData.length) return;
+        currentIndex = (index + imageData.length) % imageData.length;
+        const data = imageData[currentIndex];
+        lightboxImg.src = data.src;
+        lightboxImg.alt = data.alt || data.title || "";
+      }
 
       function open(index) {
-        const data = imageData[index];
-        if (data) {
-          lightboxImg.src = data.src;
-          lightboxImg.alt = data.alt || data.title || "";
-          lightbox.classList.remove("hidden");
-          lightbox.classList.add("flex");
-          lightbox.setAttribute("aria-hidden", "false");
-          document.body.style.overflow = "hidden";
-        }
+        if (!imageData[index]) return;
+        show(index);
+        lightbox.classList.remove("hidden");
+        lightbox.classList.add("flex");
+        lightbox.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
       }
 
       function close() {
@@ -283,16 +416,275 @@ const lightboxImageData = await Promise.all(
         });
       });
       closeBtn.addEventListener("click", close);
+      prevBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        show(currentIndex - 1);
+      });
+      nextBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        show(currentIndex + 1);
+      });
       lightbox.addEventListener("click", (e) => {
         if (e.target === lightbox) close();
       });
       document.addEventListener("keydown", (e) => {
+        if (lightbox.classList.contains("hidden")) return;
         if (e.key === "Escape") close();
+        else if (e.key === "ArrowLeft") show(currentIndex - 1);
+        else if (e.key === "ArrowRight") show(currentIndex + 1);
       });
     })();
   </script>
 
   <style>
+    /* ── PAGE TRANSITION ── */
+    @keyframes sectionFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .page-section.section-enter {
+      animation: sectionFadeIn 0.35s ease both;
+    }
+
+    /* ── HOME ── */
+    .home-wrap {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 2.25rem 2rem 3rem;
+      position: relative;
+    }
+
+    .home-name {
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: #171717;
+      margin-bottom: 0.25em;
+    }
+    .home-name-accent {
+      color: var(--color-accent-600);
+    }
+    .home-name-divider {
+      display: block;
+      border: none;
+      border-top: 2px solid var(--color-accent-300);
+      margin: 0.45rem 0 1rem;
+      width: 48px;
+      max-width: 48px;
+    }
+
+    .home-roles {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      margin-bottom: 1.5rem;
+    }
+    .home-role-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.74rem;
+      color: #525252;
+      letter-spacing: 0.01em;
+    }
+    .home-role-bullet {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--color-accent-400);
+      flex-shrink: 0;
+    }
+
+    .home-cols {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 4rem;
+      align-items: start;
+    }
+    .home-left {
+      display: flex;
+      flex-direction: column;
+    }
+    @media (max-width: 900px) {
+      .home-cols { grid-template-columns: 1fr; gap: 2rem; }
+      .home-wrap { padding: 3rem 1.5rem 4rem; }
+    }
+
+    .home-bio {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .home-bio p {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #404040;
+      font-weight: 400;
+    }
+    .home-bio a {
+      color: var(--color-accent-600);
+      text-decoration: none;
+      border-bottom: 1px solid var(--color-accent-200);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .home-bio a:hover {
+      color: var(--color-accent-700);
+      border-color: var(--color-accent-500);
+    }
+
+    .home-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.875rem;
+      align-self: flex-start;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: -0.005em;
+      color: var(--color-accent-600);
+      text-decoration: none;
+      border: 1.5px solid var(--color-accent-300);
+      padding: 0.55rem 1.2rem;
+      border-radius: 6px;
+      background: white;
+      transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+      cursor: pointer;
+    }
+    .home-cta:hover {
+      background: var(--color-accent-50);
+      border-color: var(--color-accent-500);
+      color: var(--color-accent-700);
+      transform: translateX(2px);
+    }
+    .home-cta svg { transition: transform 0.2s; }
+    .home-cta:hover svg { transform: translateX(3px); }
+
+    .home-photo-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+    }
+    .home-photo-frame {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    .home-location {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      color: #525252;
+      letter-spacing: 0.02em;
+      margin-top: 0.25rem;
+    }
+    .home-photo-placeholder {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: repeating-linear-gradient(
+        45deg,
+        #f5f5f5 0px,
+        #f5f5f5 4px,
+        #e5e5e5 4px,
+        #e5e5e5 8px
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .home-photo-placeholder span {
+      font-family: "DM Mono", monospace;
+      font-size: 0.7rem;
+      color: #737373;
+    }
+    .home-photo {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .home-socials {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .home-social-link {
+      color: #737373;
+      transition: color 0.2s, transform 0.2s;
+      display: flex;
+    }
+    .home-social-link:hover {
+      color: var(--color-accent-600);
+      transform: translateY(-2px);
+    }
+
+    .views-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      column-gap: 100px;
+      row-gap: 100px;
+    }
+    .views-item {
+      flex: 0 0 auto;
+      max-width: 100%;
+    }
+    .views-link {
+      display: block;
+      cursor: zoom-in;
+    }
+    .views-img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    @media (max-width: 640px) {
+      .views-gallery {
+        column-gap: 40px;
+        row-gap: 60px;
+      }
+    }
+    .views-caption {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      color: rgba(140, 140, 140, 0.6);
+      background: transparent;
+      border: 0;
+      padding: 0.25rem;
+      cursor: pointer;
+      transition: color 150ms ease;
+    }
+    .lightbox-close:hover {
+      color: rgba(200, 200, 200, 0.9);
+    }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(140, 140, 140, 0.6);
+      background: transparent;
+      border: 0;
+      padding: 0.5rem;
+      cursor: pointer;
+      transition: color 150ms ease;
+    }
+    .lightbox-nav:hover {
+      color: rgba(200, 200, 200, 0.9);
+    }
+    .lightbox-nav-prev { left: 1rem; }
+    .lightbox-nav-next { right: 1rem; }
     .pagefind-ui {
       --pagefind-ui-scale: 0.9;
       --pagefind-ui-primary: #2d6f4a;

@@ -4,18 +4,20 @@ import Header from "../components/Header.astro";
 import "../styles/global.css";
 
 interface Props {
+  title?: string;
   description?: string;
+  image?: string;
 }
 
-const { description } = Astro.props;
+const { title, description, image } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead description={description} />
+    <BaseHead title={title} description={description} image={image} />
   </head>
-  <body class="flex min-h-screen flex-col bg-white font-sans text-neutral-900 antialiased">
+  <body class="flex min-h-screen flex-col font-sans text-neutral-900 antialiased">
     <Header />
     <main class="flex-1">
       <slot />
