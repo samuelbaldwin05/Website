@@ -1,20 +1,12 @@
 ---
-interface Project {
-  title: string;
-  description: string;
-  tags: string[];
-  github?: string;
-  live?: string | null;
-  featured: boolean;
-  date: string;
-}
+import type { CollectionEntry } from "astro:content";
 
 interface Props {
-  project: { data: Project };
+  project: CollectionEntry<"projects">;
 }
 
 const { project } = Astro.props;
-const { title, description, tags, github, live } = project.data;
+const { title, description, tags, github, link } = project.data;
 ---
 
 <article class="border border-neutral-200 bg-white p-6">
@@ -42,14 +34,14 @@ const { title, description, tags, github, live } = project.data;
         GitHub
       </a>
     )}
-    {live && (
+    {link && (
       <a
-        href={live}
+        href={link.url}
         target="_blank"
         rel="noopener noreferrer"
         class="text-sm font-medium text-accent-600 underline-offset-2 hover:text-accent-700 hover:underline"
       >
-        Live demo
+        {link.name}
       </a>
     )}
   </div>

@@ -1,0 +1,28 @@
+[
+  {
+    "title": "Quoridor",
+    "description": "Implementation of the Quoridor game with online features such as multiplayer through WebSocket connections, friends, challenges, puzzles, and more. Play against a custom reinforcement learning PPO agent and a custom Monte Carlo Tree Search agent built in C++.",
+    "tags": ["Python", "C++", "TypeScript", "PyTorch"],
+    "github": "https://github.com/samuelbaldwin05/Quoridor",
+    "link": { "name": "Play", "url": "https://quoridor.sambaldwin.dev/" }
+  },
+  {
+    "title": "StrideTrack",
+    "description": "Tech Lead for Generate working on StrideTrack, a mobile and web app for track coaches to connect to and analyze data from insole shoe sensors. Integrated custom visualizations and AI models for anomaly detection. Built with FastApi and React, and deployed with Railway, Supabase, and GCP.",
+    "tags": ["Python", "TypeScript", "AI"],
+    "github": "https://github.com/GenerateNU/StrideTrack"
+  },
+  {
+    "title": "AudioVisual Computer Vision",
+    "description": "Research at SHAC Lab building a pipeline for labeling spoken word in films by whether the speaker's mouth is visible, to be used for MRI neuro-imaging analysis. Uses RetinaFace and MediaPipe to extract face and lip landmarks, then aggregates against aligned word transcripts.",
+    "tags": ["Python", "Computer Vision", "PyTorch"],
+    "github": "https://github.com/samuelbaldwin05/AudioVisualComputerVision"
+  },
+  {
+    "title": "MiniGolf",
+    "description": "Browser-based mini golf game built with Typescript. Features pass-and-play multiplayer mode and a custom course editor. Players can design their own courses with obstacles, hazards, and custom layouts, then play these courses against friends.",
+    "tags": ["TypeScript", "Game"],
+    "github": "https://github.com/samuelbaldwin05/MiniGolf",
+    "link": { "name": "Live demo", "url": "https://samuelbaldwin05.github.io/MiniGolf/" }
+  }
+]

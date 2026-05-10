@@ -1,9 +1,9 @@
 import { defineCollection } from "astro:content";
-import { glob } from "astro/loaders";
+import { file } from "astro/loaders";
 import { z } from "astro/zod";
 
 const views = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/views" }),
+  loader: file("./src/content/views/views.json"),
   schema: ({ image }) =>
     z.object({
       title: z.string(),
@@ -14,6 +14,29 @@ const views = defineCollection({
     }),
 });
 
+const projects = defineCollection({
+  loader: file("./src/content/projects/projects.json", {
+    parser: (text) =>
+      JSON.parse(text).map((p: Record<string, unknown>, i: number) => ({
+        ...p,
+        id: String(i),
+      })),
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    tags: z.array(z.string()),
+    github: z.string().optional(),
+    link: z
+      .object({
+        name: z.string(),
+        url: z.string(),
+      })
+      .optional(),
+  }),
+});
+
 export const collections = {
   views,
+  projects,
 };

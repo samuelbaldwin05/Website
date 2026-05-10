@@ -1,0 +1,121 @@
+[
+  {
+    "id": "machupichu",
+    "title": "Machu Picchu",
+    "location": "Peru",
+    "date": "2024-06-03",
+    "image": "./machupichu.jpg",
+    "alt": "Machu Picchu — Peru."
+  },
+  {
+    "id": "meteora1",
+    "title": "Meteora Monasteries",
+    "location": "Greece",
+    "date": "2023-11-11",
+    "image": "./meteora1.jpg",
+    "alt": "Meteora I — Greece."
+  },
+  {
+    "id": "thessaloniki",
+    "title": "Thessaloniki",
+    "location": "Greece",
+    "date": "2023-09-13",
+    "image": "./thessaloniki.jpg",
+    "alt": "Thessaloniki — Greece."
+  },
+  {
+    "id": "alaskaglacier",
+    "title": "Alaskan Glacier",
+    "location": "Alaska, USA",
+    "date": "2024-06-20",
+    "image": "./alaskaglacier.jpg",
+    "alt": "Alaskan Glacier — Alaska, USA."
+  },
+  {
+    "id": "switzerland1",
+    "title": "Swiss Alps",
+    "location": "Switzerland",
+    "date": "2023-11-17",
+    "image": "./switzerland1.jpg",
+    "alt": "Swiss Alps I — Switzerland."
+  },
+  {
+    "id": "virginia",
+    "title": "Virginia Evening",
+    "location": "Virginia, USA",
+    "date": "2025-04-29",
+    "image": "./virginia.jpg",
+    "alt": "Virginia Evening — Virginia, USA."
+  },
+  {
+    "id": "caymancoolcat",
+    "title": "Cool Cat in Cayman",
+    "location": "Cayman Islands",
+    "date": "2025-03-05",
+    "image": "./caymancoolcat.jpg",
+    "alt": "Cool Cat in Cayman — Cayman Islands."
+  },
+  {
+    "id": "rainbowmountain",
+    "title": "Rainbow Mountain",
+    "location": "Peru",
+    "date": "2024-05-29",
+    "image": "./rainbowmountain.jpg",
+    "alt": "Rainbow Mountain — Peru."
+  },
+  {
+    "id": "greece",
+    "title": "Greek Ruins",
+    "location": "Greece",
+    "date": "2023-11-06",
+    "image": "./greece.jpg",
+    "alt": "Greek Coast — Greece."
+  },
+  {
+    "id": "meteora2",
+    "title": "Meteora Mountains",
+    "location": "Greece",
+    "date": "2023-11-11",
+    "image": "./meteora2.jpg",
+    "alt": "Meteora Mountains — Greece."
+  },
+  {
+    "id": "peruocean",
+    "title": "Peruvian Coast",
+    "location": "Peru",
+    "date": "2024-06-06",
+    "image": "./peruocean.jpg",
+    "alt": "Peruvian Coast — Peru."
+  },
+  {
+    "id": "mtolympus",
+    "title": "Mount Olympus",
+    "location": "Greece",
+    "date": "2023-10-08",
+    "image": "./mtolympus.jpg",
+    "alt": "Mount Olympus — Greece."
+  },
+  {
+    "id": "fisherssunset",
+    "title": "Sunset at Fisher's",
+    "date": "2025-05-26",
+    "image": "./fisherssunset.jpg",
+    "alt": "Sunset at Fisher's."
+  },
+  {
+    "id": "perumountains",
+    "title": "Andean Peaks",
+    "location": "Peru",
+    "date": "2024-06-03",
+    "image": "./perumountains.jpg",
+    "alt": "Andean Peaks — Peru."
+  },
+  {
+    "id": "switzerland2",
+    "title": "Swiss Skiing",
+    "location": "Switzerland",
+    "date": "2023-11-18",
+    "image": "./switzerland2.jpg",
+    "alt": "Swiss Alps II — Switzerland."
+  }
+]
