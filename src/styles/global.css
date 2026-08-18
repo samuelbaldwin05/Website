@@ -28,17 +28,45 @@
 
 :root {
   --site-bg: #fafafa;
+  /* .nav-inner is 52px and .site-nav adds a 1px bottom border, so the nav
+     occupies 53px. Sections subtract this, and being 1px off is enough to give
+     the whole page a scrollbar. */
+  --nav-inner-h: 52px;
+  --nav-h: calc(var(--nav-inner-h) + 1px);
 }
 
 html {
+  /* Chrome only honours scrollbar-gutter on the root when overflow-y is
+     scroll, not auto, so the gutter has to be paid for on every section to
+     keep tab switches from jumping sideways by the scrollbar's width. */
   scrollbar-gutter: stable;
   overflow-y: scroll;
   scroll-behavior: smooth;
 }
 
+/* Home fits in one screen, so its scrollbar would just be a dead track. Drop
+   the gutter entirely there rather than hiding the bar inside it: the gutter
+   lives outside the root's content box, so nothing (including the nav's bottom
+   border) can paint into it, and the border would visibly stop short of the
+   window edge. Giving the section the width back as padding keeps its centred
+   content in exactly the same place as the sections that do scroll.
+   Skipped where home can actually overflow, since hidden would trap it. */
+@media (min-width: 901px) and (min-height: 560px) {
+  html.home-view {
+    overflow-y: hidden;
+    /* Both are needed. stable keeps reserving the gutter even under
+       overflow: hidden, and documentElement.clientWidth reports the full width
+       regardless, so the only symptom is boxes laying out 15px short. */
+    scrollbar-gutter: auto;
+  }
+  html.home-view #home {
+    padding-right: var(--scrollbar-width, 0px);
+  }
+}
+
 body {
   background-color: var(--site-bg);
-  min-height: 100vh;
+  min-height: 100dvh;
   font-family: "Inter", system-ui, sans-serif;
   font-weight: 400;
   font-size: 15px;
@@ -54,7 +82,14 @@ h1, h2, h3, h4, h5, h6 {
 /* ── PAGE SECTIONS ── */
 .page-section {
   width: 100%;
-  min-height: calc(100vh - 52px);
+  min-height: calc(100dvh - var(--nav-h));
+}
+
+/* Home centers itself in the one viewport it's meant to occupy. The :not(.hidden)
+   is load-bearing: an id selector outranks Tailwind's .hidden, so without it this
+   rule keeps home displayed after you navigate away. */
+#home.page-section:not(.hidden) {
+  display: flex;
 }
 
 /* Resume section overrides */
@@ -102,7 +137,7 @@ html.resume-view {
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
-  height: 52px;
+  height: var(--nav-inner-h);
 }
 @media (max-width: 640px) {
   .nav-inner {

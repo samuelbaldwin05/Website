@@ -54,7 +54,7 @@ const lightboxImageData = galleryItems.map((g) => ({
 
 <BaseLayout
   title="Sam Baldwin — Personal Portfolio"
-  description="Sam Baldwin — fourth-year Data Science student at Northeastern University. Projects in software engineering, machine learning, and game development."
+  description="Sam Baldwin — App Developer at Bain Capital and fourth-year Data Science student at Northeastern University. Projects in software engineering, machine learning, and game development."
 >
   <div id="home" class="page-section">
     <div class="home-wrap">
@@ -68,7 +68,7 @@ const lightboxImageData = galleryItems.map((g) => ({
         <div class="home-left">
           <div class="home-roles">
             <div class="home-role-item"><span class="home-role-bullet"></span>App Developer @ Bain Capital</div>
-            <div class="home-role-item"><span class="home-role-bullet"></span>Tech Lead @ Generate</div>
+            <div class="home-role-item"><span class="home-role-bullet"></span>Chief of Data @ Generate</div>
             <div class="home-role-item"><span class="home-role-bullet"></span>Software Engineering Alum @ NExT Consulting</div>
           </div>
 
@@ -79,16 +79,17 @@ const lightboxImageData = galleryItems.map((g) => ({
             hanging out with my cats, and approaching complex data science and machine learning problems!
           </p>
           <p>
-            I worked at NExT Consulting (<a href="https://nunext.dev" target="_blank" rel="noopener noreferrer">nunext.dev</a>)
-            with Via Separations on Stream, an AWS-hosted platform consolidating data from thousands of live sensors in an ETL pipeline with a custom Grafana site.
-            At Generate (<a href="https://generatenu.com" target="_blank" rel="noopener noreferrer">generatenu.com</a>)
-            I'm Tech Lead on StrideTrack, building a data analysis application for a shoe sensor app for track coaches.
-            This July I will be starting an App Developer role at Bain Capital.
+            I'm an App Developer at Bain Capital, building internal tools, MCP servers, and agent
+            pipelines that speed up how our teams ship software. At Generate
+            (<a href="https://generatenu.com" target="_blank" rel="noopener noreferrer">generatenu.com</a>)
+            I'm Chief of the Data branch, leading 3 teams, 6 technical leads, and 30 members.
+            Before that I was at NExT Consulting (<a href="https://nunext.dev" target="_blank" rel="noopener noreferrer">nunext.dev</a>),
+            building Stream with Via Separations, an AWS-hosted ETL platform for thousands of live sensors behind a custom Grafana site.
           </p>
           <p>
-            I'm a teaching assistant for Database Design (CS3200) with Professor Mark Fontenot at Khoury College, Northeastern University.
-            I'm also involved in research with the SHAC Lab (<a href="http://peellelab.org/" target="_blank" rel="noopener noreferrer">peellelab.org</a>),
-            directed by Jonathan Peelle. Feel free to reach out either on <a href="https://www.linkedin.com/in/baldwinsamuel/" target="_blank" rel="noopener noreferrer">LinkedIn</a> or by <a href="mailto:baldwin.sam@northeastern.edu">emailing me directly</a>!
+            I'm a teaching assistant for Database Design (CS3200) with Professor Mark Fontenot at Khoury College,
+            and I do research with the SHAC Lab (<a href="http://peellelab.org/" target="_blank" rel="noopener noreferrer">peellelab.org</a>),
+            directed by Jonathan Peelle. Feel free to reach out on <a href="https://www.linkedin.com/in/baldwinsamuel/" target="_blank" rel="noopener noreferrer">LinkedIn</a> or by <a href="mailto:baldwin.sam@northeastern.edu">emailing me directly</a>!
           </p>
 
           <a class="home-cta" href="#projects" data-nav="projects">
@@ -108,7 +109,7 @@ const lightboxImageData = galleryItems.map((g) => ({
               class="home-photo"
               width={1200}
               widths={[400, 800, 1200]}
-              sizes="(max-width: 900px) 80vw, 320px"
+              sizes="(max-width: 900px) 80vw, 410px"
               format="webp"
               quality={80}
               loading="eager"
@@ -143,20 +144,21 @@ const lightboxImageData = galleryItems.map((g) => ({
   </div>
 
   <div id="projects" class="page-section hidden">
-    <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-      <header class="mb-8">
+    <div class="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+      <header class="mb-8 fade-up">
         <h1 class="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Projects</h1>
-        <p class="mt-2 text-sm text-neutral-600 sm:text-base">Things I've built or contributed to.</p>
+        <hr class="section-divider" />
+        <p class="mt-3 text-sm text-neutral-600 sm:text-base">Things I've built or contributed to.</p>
       </header>
 
-      <div class="space-y-10" data-pagefind-body>
+      <div data-pagefind-body>
         {projects.length === 0 ? (
           <p class="text-neutral-500">No projects yet.</p>
         ) : (
-          <ul class="grid gap-8 sm:grid-cols-2">
-            {projects.map((project) => (
-              <li>
-                <ProjectCard project={project} />
+          <ul class="projects-grid">
+            {projects.map((project, i) => (
+              <li class="projects-grid-item">
+                <ProjectCard project={project} index={i} />
               </li>
             ))}
           </ul>
@@ -169,7 +171,8 @@ const lightboxImageData = galleryItems.map((g) => ({
     <div class="mx-auto max-w-4xl px-4 pt-12 sm:px-6">
       <header class="mb-8 sm:mb-12" data-pagefind-ignore>
         <h1 class="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Views</h1>
-        <p class="mt-2 text-sm text-neutral-600 sm:text-base">A few of my favorite photos.</p>
+        <hr class="section-divider" />
+        <p class="mt-3 text-sm text-neutral-600 sm:text-base">A few of my favorite photos.</p>
       </header>
     </div>
     <div class="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
@@ -247,7 +250,8 @@ const lightboxImageData = galleryItems.map((g) => ({
     <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
       <header class="mb-8" data-pagefind-ignore>
         <h1 class="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Games</h1>
-        <p class="mt-2 text-sm text-neutral-600 sm:text-base">
+        <hr class="section-divider" />
+        <p class="mt-3 text-sm text-neutral-600 sm:text-base">
           I enjoy making games and I'm actively improving Quoridor and its AI model!
         </p>
       </header>
@@ -309,6 +313,15 @@ const lightboxImageData = galleryItems.map((g) => ({
       const sections = document.querySelectorAll(".page-section");
       const navLinks = document.querySelectorAll("[data-nav]");
 
+      // Each section is its own "page" as far as analytics is concerned.
+      function trackPageview(id) {
+        if (!window.posthog) return;
+        window.posthog.capture("$pageview", {
+          $current_url: window.location.origin + window.location.pathname + "#" + id,
+          section: id,
+        });
+      }
+
       function showSection(id) {
         sections.forEach((section) => {
           section.classList.add("hidden");
@@ -340,6 +353,7 @@ const lightboxImageData = galleryItems.map((g) => ({
             void el.offsetWidth;
             el.style.animation = "";
           });
+          document.documentElement.classList.toggle("home-view", id === "home");
           window.history.pushState({ section: id }, "", `#${id}`);
           window.scrollTo({ top: 0, behavior: "instant" });
           if (id === "resume") {
@@ -351,6 +365,7 @@ const lightboxImageData = galleryItems.map((g) => ({
             document.documentElement.classList.remove("resume-view");
             document.documentElement.style.overflow = "";
           }
+          trackPageview(id);
         }
       }
 
@@ -444,17 +459,48 @@ const lightboxImageData = galleryItems.map((g) => ({
       animation: sectionFadeIn 0.35s ease both;
     }
 
+    /* ── SECTION HEADERS ── */
+    /* Same accent rule as the home page's, so every section is marked the
+       same way. */
+    .section-divider {
+      display: block;
+      border: none;
+      border-top: 2px solid var(--color-accent-300);
+      margin: 0.6rem 0 0;
+      width: 48px;
+    }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    @media (max-width: 640px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* ── HOME ── */
     .home-wrap {
       max-width: 1160px;
-      margin: 0 auto;
-      padding: 2.25rem 2rem 3rem;
+      /* auto margins vertically center the block inside the flex section */
+      margin: auto;
+      width: 100%;
+      padding: 1.75rem 2rem 2rem;
       position: relative;
     }
 
     .home-name {
       font-family: "Inter", system-ui, sans-serif;
-      font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+      /* The vh term shrinks the name on short viewports so it can't push the
+         rest of the page into a scrollbar. Ceiling stays well under the ~1096px
+         of usable width, where the name would wrap to two lines. */
+      font-size: clamp(1.32rem, min(5.25vw, 6.6vh), 3.97rem);
       font-weight: 600;
       line-height: 1.1;
       letter-spacing: -0.025em;
@@ -498,7 +544,11 @@ const lightboxImageData = galleryItems.map((g) => ({
 
     .home-cols {
       display: grid;
-      grid-template-columns: 1fr 320px;
+      /* Fractions, not a fixed px photo column, so the text-to-photo ratio holds
+         at every width instead of the bio absorbing all the loss as the window
+         narrows. Capped by .home-wrap's 1160px, which puts the photo at ~410px
+         on anything 1224px and wider. */
+      grid-template-columns: 1.52fr 1fr;
       gap: 4rem;
       align-items: start;
     }
@@ -508,7 +558,7 @@ const lightboxImageData = galleryItems.map((g) => ({
     }
     @media (max-width: 900px) {
       .home-cols { grid-template-columns: 1fr; gap: 2rem; }
-      .home-wrap { padding: 3rem 1.5rem 4rem; }
+      .home-wrap { padding: 2.5rem 1.5rem 3rem; }
     }
 
     .home-bio {
@@ -620,6 +670,25 @@ const lightboxImageData = galleryItems.map((g) => ({
       color: var(--color-accent-600);
       transform: translateY(-2px);
     }
+
+    /* Home fits in one screen at full size down to a ~650px viewport, so leave
+       the type alone above that. These only catch the cases measured to
+       overflow: very short viewports, and narrow desktop windows where the bio
+       column gets squeezed and the text runs longer. Below 901px the page
+       stacks and scrolls normally, so it's excluded. */
+    @media (min-width: 901px) and (max-height: 660px),
+           (min-width: 901px) and (max-width: 1150px) and (max-height: 800px) {
+      .home-wrap { padding: 1rem 2rem 1.25rem; }
+      .home-name-divider { margin: 0.35rem 0 0.75rem; }
+      .home-roles { gap: 0.25rem; margin-bottom: 1rem; }
+      .home-cols { grid-template-columns: 2.2fr 1fr; gap: 3rem; }
+      .home-bio { gap: 0.75rem; }
+      .home-bio p { font-size: 0.86rem; line-height: 1.6; }
+      .home-cta { margin-top: 0.5rem; }
+      .home-photo-col { gap: 0.7rem; }
+      .home-location { margin-top: 0; }
+    }
+
 
     .views-gallery {
       display: flex;

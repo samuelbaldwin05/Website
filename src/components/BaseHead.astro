@@ -7,7 +7,7 @@ interface Props {
 
 const {
   title = "Sam Baldwin",
-  description = "Sam Baldwin — fourth-year Data Science student at Northeastern University. Personal portfolio, projects, and resume.",
+  description = "Sam Baldwin — App Developer at Bain Capital and fourth-year Data Science student at Northeastern University. Personal portfolio, projects, and resume.",
   image = "/headshot.jpg",
 } = Astro.props;
 
@@ -22,6 +22,10 @@ const personSchema = {
   url: Astro.site?.toString(),
   image: ogImage,
   jobTitle: "App Developer",
+  worksFor: {
+    "@type": "Organization",
+    name: "Bain Capital",
+  },
   alumniOf: {
     "@type": "CollegeOrUniversity",
     name: "Northeastern University",

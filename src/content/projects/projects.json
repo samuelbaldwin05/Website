@@ -1,28 +1,50 @@
 [
   {
+    "title": "StrideTrack",
+    "description": "Data Tech Lead at Generate for a track shoe sensor startup, leading a team of 9 and advising the founder on product architecture and hardware-software integration. Mobile and web app that lets coaches pull data off insole sensors, with custom visualizations and anomaly detection models on top. Built with FastAPI and React, deployed on Railway, Supabase, and GCP.",
+    "tags": ["Python", "TypeScript", "Machine Learning"],
+    "github": "https://github.com/GenerateNU/StrideTrack"
+  },
+  {
+    "title": "Audiovisual Speech Perception",
+    "description": "Research at Northeastern's Speech, Hearing, and Communication Lab, labeling spoken words in film by whether the speaker's mouth is visible so audio and visual cues can be separated in fMRI neuroimaging analysis. The pipeline pulls face and lip landmarks with YOLOv8 and MediaPipe, then models temporal speech cues with a custom RNN over aligned word transcripts. Runs on the Discovery HPC cluster with CUDA to handle full video datasets.",
+    "tags": ["Python", "Computer Vision", "PyTorch"],
+    "github": "https://github.com/samuelbaldwin05/AudioVisualCV"
+  },
+  {
+    "title": "Research Assistant",
+    "description": "Desktop app built at Water Horizons that lets researchers query their own paper library and surface relevant articles they don't have yet. RAG pipeline over FAISS semantic search, backed by either OpenAI or a local Ollama model so sensitive libraries can stay offline. Electron front end on a FastAPI backend with SQLite, Zotero sync, and Google Scholar scraping, packaged into a distributable installer.",
+    "tags": ["Python", "TypeScript", "RAG", "Electron"]
+  },
+  {
     "title": "Quoridor",
-    "description": "Implementation of the Quoridor game with online features such as multiplayer through WebSocket connections, friends, challenges, puzzles, and more. Play against a custom reinforcement learning PPO agent and a custom Monte Carlo Tree Search agent built in C++.",
-    "tags": ["Python", "C++", "TypeScript", "PyTorch"],
+    "description": "Full implementation of the board game Quoridor with online multiplayer over WebSockets, accounts, Elo ratings, leaderboards, puzzles, and a ladder of bots to play against. React and FastAPI, running on Azure Container Apps with Supabase for auth and Postgres, shipped through GitHub Actions with per-PR preview environments and auto-applied migrations. The strongest opponents run the C++ MCTS engine listed further down, compiled into a Python wheel in the backend image.",
+    "tags": ["TypeScript", "Python", "C++", "Azure", "Supabase"],
     "github": "https://github.com/samuelbaldwin05/Quoridor",
     "link": { "name": "Play", "url": "https://quoridor.sambaldwin.dev/" }
   },
   {
-    "title": "StrideTrack",
-    "description": "Tech Lead for Generate working on StrideTrack, a mobile and web app for track coaches to connect to and analyze data from insole shoe sensors. Integrated custom visualizations and AI models for anomaly detection. Built with FastApi and React, and deployed with Railway, Supabase, and GCP.",
-    "tags": ["Python", "TypeScript", "AI"],
-    "github": "https://github.com/GenerateNU/StrideTrack"
+    "title": "herdr-burn",
+    "description": "Plugin for the herdr terminal multiplexer that shows live Claude Code cost and quota per pane, plus a workspace overlay ranking panes by spend. Parses Claude Code's JSONL transcripts and prices input, output, cache read, and cache write tokens separately. Standard library only, and it installs itself into Claude Code's statusLine hook with a config backup and automatic rollback if validation fails.",
+    "tags": ["Python", "Developer Tools", "CLI"],
+    "github": "https://github.com/samuelbaldwin05/herdr-burn"
   },
   {
-    "title": "AudioVisual Computer Vision",
-    "description": "Research at SHAC Lab building a pipeline for labeling spoken word in films by whether the speaker's mouth is visible, to be used for MRI neuro-imaging analysis. Uses RetinaFace and MediaPipe to extract face and lip landmarks, then aggregates against aligned word transcripts.",
-    "tags": ["Python", "Computer Vision", "PyTorch"],
-    "github": "https://github.com/samuelbaldwin05/AudioVisualComputerVision"
+    "title": "Lattice",
+    "description": "Knowledge graph tool that builds a custom ontology for whatever documents you hand it. An LLM proposes the ontology from your papers, you edit it, then everything is re-ingested into a graph you can query in chat with citations back to the source text. FastAPI with cognee and pgvector, Neo4j, and a React front end rendering the graph with Cytoscape, across five services under Docker Compose.",
+    "tags": ["Python", "TypeScript", "LLM", "Neo4j"],
+    "github": "https://github.com/samuelbaldwin05/Lattice"
   },
   {
-    "title": "MiniGolf",
-    "description": "Browser-based mini golf game built with Typescript. Features pass-and-play multiplayer mode and a custom course editor. Players can design their own courses with obstacles, hazards, and custom layouts, then play these courses against friends.",
-    "tags": ["TypeScript", "Game"],
-    "github": "https://github.com/samuelbaldwin05/MiniGolf",
-    "link": { "name": "Live demo", "url": "https://samuelbaldwin05.github.io/MiniGolf/" }
+    "title": "Quoridor MCTS Engine",
+    "description": "C++20 Quoridor engine and Monte Carlo tree search bot with no external dependencies. Uses UCB1 and PUCT selection, heuristic-guided rollouts, root parallelization across threads, and action pruning that cuts Quoridor's ~130 move branching factor down to 15-25. Wins about 90% of games against a strong Dijkstra-based heuristic bot at a two second budget, measured with an Elo and SPRT evaluation harness. Also builds to WebAssembly.",
+    "tags": ["C++", "Game AI", "Algorithms", "WebAssembly"],
+    "github": "https://github.com/samuelbaldwin05/QuoridorMCTS"
+  },
+  {
+    "title": "Contexto Solver",
+    "description": "Word2Vec written from scratch and trained on a Simple English Wikipedia dump, then pointed at the word game Contexto. Includes the whole pipeline (download, preprocess, tokenize, filter, train) plus a guess strategy layer that picks the next word from the embedding space, and a Gradio app for playing along.",
+    "tags": ["Python", "NLP", "Machine Learning"],
+    "github": "https://github.com/samuelbaldwin05/ContextoSolver"
   }
 ]
