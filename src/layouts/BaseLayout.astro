@@ -1,6 +1,7 @@
 ---
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
+import Analytics from "../components/Analytics.astro";
 import "../styles/global.css";
 
 interface Props {
@@ -16,8 +17,33 @@ const { title, description, image } = Astro.props;
 <html lang="en">
   <head>
     <BaseHead title={title} description={description} image={image} />
+    <Analytics />
+    <script is:inline>
+      // Measure the scrollbar before home-view removes the gutter, and apply
+      // the class here rather than in the nav script so home never paints at
+      // the wrong offset. A probe element can't be used yet: nodes appended
+      // during head parsing aren't laid out, so they measure 0.
+      (function () {
+        var root = document.documentElement;
+        var width = window.innerWidth - root.clientWidth;
+        if (width > 0) root.style.setProperty("--scrollbar-width", width + "px");
+        root.classList.add("home-view");
+        // Overlay scrollbars legitimately measure 0. Re-check against a real
+        // probe once there's a body, which also covers the case where the
+        // stylesheet hadn't applied above.
+        document.addEventListener("DOMContentLoaded", function () {
+          var probe = document.createElement("div");
+          probe.style.cssText =
+            "position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll";
+          document.body.appendChild(probe);
+          var measured = probe.offsetWidth - probe.clientWidth;
+          probe.remove();
+          root.style.setProperty("--scrollbar-width", measured + "px");
+        });
+      })();
+    </script>
   </head>
-  <body class="flex min-h-screen flex-col font-sans text-neutral-900 antialiased">
+  <body class="flex min-h-dvh flex-col font-sans text-neutral-900 antialiased">
     <Header />
     <main class="flex-1">
       <slot />
